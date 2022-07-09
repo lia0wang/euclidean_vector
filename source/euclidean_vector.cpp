@@ -114,12 +114,11 @@ namespace comp6771 {
 
 	auto euclidean_vector::operator-() const noexcept -> euclidean_vector
 	{
-		auto cp_vector = euclidean_vector(*this);
-		std::transform(cp_vector.magnitude_.get(),
-					   cp_vector.magnitude_.get() + dimension_,
-					   cp_vector.magnitude_.get(),
-					   [](double x) { return -x; });
-		return cp_vector;
+		std::transform(magnitude_.get(),
+					   magnitude_.get() + dimension_,
+					   magnitude_.get(),
+					   std::negate<double>());
+		return *this;
 	}
 
 	auto euclidean_vector::operator+=(euclidean_vector const& v2) -> euclidean_vector&
@@ -238,15 +237,15 @@ namespace comp6771 {
 
 	auto operator<<(std::ostream& os, euclidean_vector const& vec) noexcept -> std::ostream&
 	{
+		if (vec.dimension_ == 0)
+			return os << "[]";
+
 		os << "[";
 
 		std::copy(vec.magnitude_.get(),
 				  vec.magnitude_.get() + vec.dimension_,
 				  std::ostream_iterator<double>(os, " "));
-
-		if (vec.dimension_ > 0)
-			os << vec.magnitude_[vec.dimension_ - 1];
-
+		os.seekp(-1, std::ios_base::end);
 		return os << "]";
 	}
 
@@ -261,10 +260,7 @@ namespace comp6771 {
 		auto e_norm = std::sqrt(std::inner_product(v.magnitude_.get(),
 												   v.magnitude_.get() + v.dimension_,
 												   v.magnitude_.get(),
-												   0.0,
-												   std::plus<double>(),
-												   [](double x, double y)
-												   { return std::pow(x, 2) + std::pow(y, 2); }));
+												   0.0));
 		v.e_norm_ = e_norm;
 		return e_norm;
 	}
