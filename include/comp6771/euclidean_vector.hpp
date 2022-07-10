@@ -1,9 +1,13 @@
 #ifndef COMP6771_EUCLIDEAN_VECTOR_HPP
 #define COMP6771_EUCLIDEAN_VECTOR_HPP
 
+#include <cassert>
+#include <cmath>
 #include <iostream>
 #include <list>
 #include <memory>
+#include <numeric>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -17,7 +21,9 @@ namespace comp6771 {
 
 	class euclidean_vector {
 	public:
-		// Constructors
+		/*
+		 * Constructors
+		 */
 		euclidean_vector() noexcept;
 		explicit euclidean_vector(int) noexcept;
 		euclidean_vector(int, double) noexcept;
@@ -25,39 +31,46 @@ namespace comp6771 {
 		                 std::vector<double>::const_iterator) noexcept;
 		euclidean_vector(std::initializer_list<double>) noexcept;
 
-		// Copy constructor
+		// Copy Constructor
 		euclidean_vector(euclidean_vector const&) noexcept;
 
-		// Move constructor
+		// Move Constructor
 		euclidean_vector(euclidean_vector&&) noexcept;
 
 		// Destructor
-		~euclidean_vector() noexcept;
+		~euclidean_vector() noexcept = default;
 
-		// Operator overloads
-		auto operator=(euclidean_vector const&) noexcept -> euclidean_vector&; // Copy assignment
-		auto operator=(euclidean_vector&&) noexcept -> euclidean_vector&; // Move assignment
+		/*
+		 * Operator Overloads
+		 */
+		auto operator=(euclidean_vector const&) noexcept -> euclidean_vector&; // Copy Assignment
+		auto operator=(euclidean_vector&&) noexcept -> euclidean_vector&; // Move Assignment
 
+		// Subscript
 		auto operator[](int index) noexcept -> double&;
 		auto operator[](int index) const noexcept -> const double&;
 
-		auto operator+() const noexcept -> euclidean_vector; // Unary plus
+		auto operator+() const noexcept -> euclidean_vector; // Unary Plus
 		auto operator-() const noexcept -> euclidean_vector; // Negation
 
-		auto operator+=(euclidean_vector const&) -> euclidean_vector&; // Compound addition
-		auto operator-=(euclidean_vector const&) -> euclidean_vector&; // Compound subtraction
-		auto operator*=(double) noexcept -> euclidean_vector&; // Compound multiplication
-		auto operator/=(double) -> euclidean_vector&; // Compound division
+		auto operator+=(euclidean_vector const&) -> euclidean_vector&; // Compound Addition
+		auto operator-=(euclidean_vector const&) -> euclidean_vector&; // Compound Subtraction
+		auto operator*=(double) noexcept -> euclidean_vector&; // Compound Multiplication
+		auto operator/=(double) -> euclidean_vector&; // Compound Division
 
-		explicit operator std::vector<double>() const noexcept; // Vector type conversion
-		explicit operator std::list<double>() const noexcept; // List type conversion
+		explicit operator std::vector<double>() const noexcept; // Vector Type Conversion
+		explicit operator std::list<double>() const noexcept; // List Type Conversion
 
-		// Member functions
-		[[nodiscard]] auto at(int) const -> double; // Return value at index
-		[[nodiscard]] auto at(int) -> double&; // Return reference to value at index
+		/*
+		 * Member Functions
+		 */
+		[[nodiscard]] auto at(int) const -> double; // Returns the value of the magnitude
+		[[nodiscard]] auto at(int) -> double&; // Returns the reference of the magnitude
 		[[nodiscard]] auto dimensions() const -> int; // Return the number of dimensions
 
-		// Friend functions
+		/*
+		 * Friend Functions
+		 */
 		friend auto operator==(euclidean_vector const&,
 		                       euclidean_vector const&) noexcept -> bool; // Equal
 		friend auto operator!=(euclidean_vector const&,
@@ -72,9 +85,11 @@ namespace comp6771 {
 		friend auto operator/(euclidean_vector const&, double) -> euclidean_vector; // Divide
 
 		friend auto operator<<(std::ostream&,
-		                       euclidean_vector const&) noexcept -> std::ostream&; // Output stream
+		                       euclidean_vector const&) noexcept -> std::ostream&; // Output Stream
 
-		// Helper functions
+		/*
+		 * Helper Functions
+		 */
 		static auto is_dimension_equal(euclidean_vector const& v1, euclidean_vector const& v2) -> bool;
 
 		static auto
@@ -96,11 +111,11 @@ namespace comp6771 {
 		mutable double e_norm_;
 	};
 
-	// Utility functions
-	auto euclidean_norm(euclidean_vector const& v) noexcept -> double; // Euclidean norm
-	auto unit(euclidean_vector const& v) -> euclidean_vector; // Unit vector
-	auto dot(euclidean_vector const& x,
-	         euclidean_vector const& y) -> double; // Dot product
+	// Utility Functions
+	auto euclidean_norm(euclidean_vector const& v) noexcept -> double; // Euclidean Norm
+	auto unit(euclidean_vector const& v) -> euclidean_vector; // Unit Vector
+	auto dot(euclidean_vector const& v1,
+	         euclidean_vector const& v2) -> double; // Dot Product
 
 } // namespace comp6771
 #endif // COMP6771_EUCLIDEAN_VECTOR_HPP

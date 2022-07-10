@@ -1,10 +1,8 @@
 // Copyright (c) Christopher Di Bella.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
-#include <cassert>
-#include <cmath>
+
 #include <comp6771/euclidean_vector.hpp>
-#include <numeric>
 
 namespace comp6771 {
 
@@ -56,10 +54,8 @@ namespace comp6771 {
 		org.e_norm_ = -1;
 	}
 
-	euclidean_vector::~euclidean_vector() noexcept {}
-
 	/*
-	 * Operator overloads
+	 * Operator Overloads
 	 */
 	auto euclidean_vector::operator=(euclidean_vector const& org) noexcept -> euclidean_vector& {
 		auto cp_vector = euclidean_vector(org);
@@ -70,7 +66,7 @@ namespace comp6771 {
 	}
 
 	auto euclidean_vector::operator=(euclidean_vector&& org) noexcept -> euclidean_vector& {
-		if (this == &org)
+		if (this == &org) // self-assignment
 			return *this;
 
 		std::swap(magnitude_, org.magnitude_);
@@ -156,7 +152,7 @@ namespace comp6771 {
 	}
 
 	/*
-	 * Member functions
+	 * Member Functions
 	 */
 	[[nodiscard]] auto euclidean_vector::at(int index) const -> double {
 		euclidean_vector::throw_if_index_out_of_range(index, static_cast<int>(dimension_));
@@ -174,7 +170,7 @@ namespace comp6771 {
 	}
 
 	/*
-	 * Friend functions
+	 * Friend Functions
 	 */
 	auto operator==(euclidean_vector const& v1, euclidean_vector const& v2) noexcept -> bool {
 		return euclidean_vector::is_dimension_equal(v1, v2)
@@ -255,9 +251,8 @@ namespace comp6771 {
 	}
 
 	/*
-	 * Helper functions
+	 * Helper Functions
 	 */
-
 	auto euclidean_vector::throw_if_norm_is_zero(double norm) -> void {
 		if (norm == 0)
 			throw euclidean_vector_error("euclidean_vector with zero euclidean normal does not "
@@ -278,7 +273,9 @@ namespace comp6771 {
 	auto euclidean_vector::throw_if_dimension_not_equal(euclidean_vector const& v1,
 	                                                    euclidean_vector const& v2) -> void {
 		if (not euclidean_vector::is_dimension_equal(v1, v2))
-			throw euclidean_vector_error("Dimensions of LHS(" + std::to_string(v1.dimension_) + ") and RHS("
+			throw euclidean_vector_error("Dimensions of LHS(" + std::to_string(v1.dimension_)
+			                             + ") "
+			                               "and RHS("
 			                             + std::to_string(v2.dimension_) + ") do not match");
 	}
 
