@@ -111,7 +111,9 @@ namespace comp6771 {
 		mutable double e_norm_;
 	};
 
-	// Utility Functions
+	/*
+	 * Utility Functions
+	 */
 	auto euclidean_norm(euclidean_vector const& v) noexcept -> double; // Euclidean Norm
 	auto unit(euclidean_vector const& v) -> euclidean_vector; // Unit Vector
 	auto dot(euclidean_vector const& v1,

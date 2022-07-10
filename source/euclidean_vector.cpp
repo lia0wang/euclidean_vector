@@ -9,7 +9,6 @@ namespace comp6771 {
 	/*
 	 * Constructors
 	 */
-
 	euclidean_vector::euclidean_vector() noexcept
 	: magnitude_{std::make_unique<double[]>(1)}
 	, dimension_{1}
