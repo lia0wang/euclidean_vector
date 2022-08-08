@@ -94,8 +94,8 @@ namespace comp6771 {
 
 		static auto
 		throw_if_dimension_not_equal(euclidean_vector const& v1, euclidean_vector const& v2) -> void;
-		auto throw_if_factor_is_zero(double) -> void;
-		auto throw_if_index_out_of_range(int, int) const -> void;
+		auto static throw_if_factor_is_zero(double) -> void;
+		auto static throw_if_index_out_of_range(int, int) -> void;
 
 		friend auto euclidean_norm(euclidean_vector const& v) noexcept -> double;
 		static auto throw_if_dimension_is_zero(int) -> void;

@@ -40,7 +40,7 @@ namespace comp6771 {
 	}
 
 	euclidean_vector::euclidean_vector(euclidean_vector const& org) noexcept
-	: euclidean_vector(org.dimension_) {
+	: euclidean_vector(static_cast<int>(org.dimension_)) {
 		std::copy(org.magnitude_.get(), org.magnitude_.get() + dimension_, magnitude_.get());
 		e_norm_ = org.e_norm_;
 	}
@@ -65,8 +65,9 @@ namespace comp6771 {
 	}
 
 	auto euclidean_vector::operator=(euclidean_vector&& org) noexcept -> euclidean_vector& {
-		if (this == &org) // self-assignment
+		if (this == &org) {
 			return *this;
+		}
 
 		std::swap(magnitude_, org.magnitude_);
 		std::swap(dimension_, org.dimension_);
@@ -81,13 +82,13 @@ namespace comp6771 {
 	}
 
 	auto euclidean_vector::operator[](int index) noexcept -> double& {
-		assert(index >= 0 and index < dimension_);
+		assert(index >= 0 and index < static_cast<int>(dimension_));
 		e_norm_ = -1;
 		return magnitude_[static_cast<std::size_t>(index)];
 	}
 
 	auto euclidean_vector::operator[](int index) const noexcept -> const double& {
-		assert(index >= 0 and index < dimension_);
+		assert(index >= 0 and index < static_cast<int>(dimension_));
 		return magnitude_[static_cast<std::size_t>(index)];
 	}
 
@@ -99,7 +100,7 @@ namespace comp6771 {
 		std::transform(magnitude_.get(),
 		               magnitude_.get() + dimension_,
 		               magnitude_.get(),
-		               std::negate<double>());
+		               std::negate<>());
 		return *this;
 	}
 
@@ -109,7 +110,7 @@ namespace comp6771 {
 		               magnitude_.get() + dimension_,
 		               v2.magnitude_.get(),
 		               magnitude_.get(),
-		               std::plus<double>());
+		               std::plus<>());
 		e_norm_ = -1;
 		return *this;
 	}
@@ -120,14 +121,14 @@ namespace comp6771 {
 		               magnitude_.get() + dimension_,
 		               v2.magnitude_.get(),
 		               magnitude_.get(),
-		               std::minus<double>());
+		               std::minus<>());
 		e_norm_ = -1;
 		return *this;
 	}
 
 	auto euclidean_vector::operator*=(double v2) noexcept -> euclidean_vector& {
 		std::transform(magnitude_.get(), magnitude_.get() + dimension_, magnitude_.get(), [&](double x) {
-			return std::multiplies<double>()(x, v2);
+			return std::multiplies<>()(x, v2);
 		});
 		e_norm_ = -1;
 		return *this;
@@ -136,7 +137,7 @@ namespace comp6771 {
 	auto euclidean_vector::operator/=(double v2) -> euclidean_vector& {
 		euclidean_vector::throw_if_factor_is_zero(v2);
 		std::transform(magnitude_.get(), magnitude_.get() + dimension_, magnitude_.get(), [&](double x) {
-			return std::divides<double>()(x, v2);
+			return std::divides<>()(x, v2);
 		});
 		e_norm_ = -1;
 		return *this;
@@ -177,7 +178,7 @@ namespace comp6771 {
 		                      v1.magnitude_.get() + v1.dimension_,
 		                      v2.magnitude_.get(),
 		                      v2.magnitude_.get() + v2.dimension_,
-		                      [](double x, double y) { return std::equal_to<double>()(x, y); });
+		                      [](double x, double y) { return std::equal_to<>()(x, y); });
 	}
 
 	auto operator!=(euclidean_vector const& v1, euclidean_vector const& v2) noexcept -> bool {
@@ -205,8 +206,9 @@ namespace comp6771 {
 	}
 
 	auto operator<<(std::ostream& os, euclidean_vector const& vec) noexcept -> std::ostream& {
-		if (vec.dimension_ == 0)
+		if (vec.dimension_ == 0) {
 			return os << "[]";
+		}
 
 		os << "[";
 
@@ -221,8 +223,9 @@ namespace comp6771 {
 	 * Utility functions
 	 */
 	auto euclidean_norm(euclidean_vector const& v) noexcept -> double {
-		if (v.e_norm_ != -1)
+		if (v.e_norm_ != -1) {
 			return v.e_norm_;
+		}
 
 		auto e_norm = std::sqrt(std::inner_product(v.magnitude_.get(),
 		                                           v.magnitude_.get() + v.dimension_,
@@ -253,15 +256,17 @@ namespace comp6771 {
 	 * Helper Functions
 	 */
 	auto euclidean_vector::throw_if_norm_is_zero(double norm) -> void {
-		if (norm == 0)
+		if (norm == 0) {
 			throw euclidean_vector_error("euclidean_vector with zero euclidean normal does not "
 			                             "have a unit vector");
+		}
 	}
 
 	auto euclidean_vector::throw_if_dimension_is_zero(int dimension) -> void {
-		if (dimension == 0)
+		if (dimension == 0) {
 			throw euclidean_vector_error("euclidean_vector with no dimensions does not have a unit "
 			                             "vector");
+		}
 	}
 
 	auto euclidean_vector::is_dimension_equal(euclidean_vector const& v1, euclidean_vector const& v2)
@@ -271,21 +276,24 @@ namespace comp6771 {
 
 	auto euclidean_vector::throw_if_dimension_not_equal(euclidean_vector const& v1,
 	                                                    euclidean_vector const& v2) -> void {
-		if (not euclidean_vector::is_dimension_equal(v1, v2))
+		if (not euclidean_vector::is_dimension_equal(v1, v2)) {
 			throw euclidean_vector_error("Dimensions of LHS(" + std::to_string(v1.dimension_)
 			                             + ") "
 			                               "and RHS("
 			                             + std::to_string(v2.dimension_) + ") do not match");
+		}
 	}
 
 	auto euclidean_vector::throw_if_factor_is_zero(double factor) -> void {
-		if (factor == 0)
+		if (factor == 0) {
 			throw euclidean_vector_error("Invalid vector division by 0");
+		}
 	}
 
-	auto euclidean_vector::throw_if_index_out_of_range(int index, int dimension) const -> void {
-		if (index < 0 or index >= dimension)
+	auto euclidean_vector::throw_if_index_out_of_range(int index, int dimension) -> void {
+		if (index < 0 or index >= dimension) {
 			throw euclidean_vector_error("Index " + std::to_string(index)
 			                             + " is not valid for this euclidean_vector object");
+		}
 	}
 } // namespace comp6771
